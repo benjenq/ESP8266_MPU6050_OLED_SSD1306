@@ -19,7 +19,7 @@ Two I2C devices works together demo
 
 **VERSION**:   0.1
 
-Depends on the following Arduino libraries. I include in this library because few code modify required.  
+Depends on the following Arduino libraries.  
 - [jrowberg's I2Cdev library for Arduino](https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/I2Cdev)
 - [olikraus's U8g2 library for Arduino](https://github.com/olikraus/U8g2_Arduino)
 
