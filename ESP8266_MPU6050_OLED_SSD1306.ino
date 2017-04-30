@@ -3,30 +3,37 @@
 #include "I2Cdev.h" //https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/I2Cdev
 #include "MPU6050.h" //https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/MPU6050
 #include <Arduino.h> 
-#include <U8g2lib.h> //https://github.com/olikraus/U8g2_Arduino
+// #include <U8g2lib.h> //https://github.com/olikraus/U8g2_Arduino
+#include "SSD1306Wire.h" //https://github.com/squix78/esp8266-oled-ssd1306
+//#include "SH1106Wire.h" //https://github.com/squix78/esp8266-oled-ssd1306
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
    #include <Wire.h>
 #endif
 
 
-#if defined(__AVR_ATmega328P__) //Arduino Uno
-  #define LED_PIN 13
-  U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
-  //U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
+#if defined(ARDUINO_ESP8266_ESP01) //Arduino Uno
+  #define LED_PIN 16
+  SSD1306Wire display(0x3c, 2, 0);
+  //SH1106Wire display(0x3c, 2, 0);
 
 #elif defined(ARDUINO_ESP8266_NODEMCU)
   #define LED_PIN D0
-  //U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 13, /* data=*/ 11, /* reset=*/ 8);
-  U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=D1(SCL)*/ SCL, /* data=D2(SDA)*/ SDA, /* reset=*/ U8X8_PIN_NONE);   // All Boards without Reset of the Display
-  //U8G2_SH1106_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=D1(SCL)*/ SCL, /* data=D2(SDA)*/ SDA, /* reset=*/ U8X8_PIN_NONE);   // All Boards without Reset of the Display
-
+  SSD1306Wire display(0x3c, D2, D1);
+  //SH1106Wire display(0x3c, D2, D1);
+  
 #endif
 
 
 // MPU control/status vars
 MPU6050 mpu;
 int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
+char AcXStr[7];
+char AcYStr[7];
+char AcZStr[7];
+char GyXStr[7];
+char GyYStr[7];
+char GyZStr[7];
 
 bool blinkState = false;
 
@@ -324,45 +331,40 @@ void drawScreen( void)
   // renders all the lines after erasing the old ones.
   // in here is the only code actually interfacing with the OLED. so if you use a different lib, this is where to change it.
 
-  u8g2.setDrawColor(0);
+  display.setColor(BLACK);
   for (int i = 0; i < OldLinestoRender; i++ )
   {
-    u8g2.drawLine(ORender[i].p0.x, ORender[i].p0.y, ORender[i].p1.x, ORender[i].p1.y); // erase the old lines.
+    display.drawLine(ORender[i].p0.x, ORender[i].p0.y, ORender[i].p1.x, ORender[i].p1.y); // erase the old lines.
   }
+  display.drawString(19, 0, AcXStr); // write something to the internal memory
+  display.drawString(19, 15, AcYStr); // write something to the internal memory
+  display.drawString(19, 27, AcZStr); // write something to the internal memory
+  display.drawString(19, 39, GyXStr); // write something to the internal memory
+  display.drawString(19, 51, GyYStr); // write something to the internal memory
+  display.drawString(79, 51, GyZStr); // write something to the internal memory
 
-  u8g2.setDrawColor(1);
-
+  display.setColor(WHITE);
 
   for (int i = 0; i < LinestoRender; i++ )
   {
-    u8g2.drawLine(Render[i].p0.x, Render[i].p0.y, Render[i].p1.x, Render[i].p1.y);
+    display.drawLine(Render[i].p0.x, Render[i].p0.y, Render[i].p1.x, Render[i].p1.y);
   }
   OldLinestoRender = LinestoRender;
-  char AcXStr[7];
+
   sprintf (AcXStr, "%6d", AcX);
-
-  char AcYStr[7];
   sprintf (AcYStr, "%6d", AcY);
-
-  char AcZStr[7];
   sprintf (AcZStr, "%6d", AcZ);
-
-  char GyXStr[7];
   sprintf (GyXStr, "%6d", GyX);
-
-  char GyYStr[7];
   sprintf (GyYStr, "%6d", GyY);
-
-  char GyZStr[7];
   sprintf (GyZStr, "%6d", GyZ);
 
-  u8g2.drawStr(19, 15, AcXStr); // write something to the internal memory
-  u8g2.drawStr(19, 27, AcYStr); // write something to the internal memory
-  u8g2.drawStr(19, 39, AcZStr); // write something to the internal memory
-  u8g2.drawStr(19, 51, GyXStr); // write something to the internal memory
-  u8g2.drawStr(19, 63, GyYStr); // write something to the internal memory
-  u8g2.drawStr(79, 63, GyZStr); // write something to the internal memory
-  u8g2.sendBuffer();
+  display.drawString(19, 0, AcXStr); // write something to the internal memory
+  display.drawString(19, 15, AcYStr); // write something to the internal memory
+  display.drawString(19, 27, AcZStr); // write something to the internal memory
+  display.drawString(19, 39, GyXStr); // write something to the internal memory
+  display.drawString(19, 51, GyYStr); // write something to the internal memory
+  display.drawString(79, 51, GyZStr); // write something to the internal memory
+  display.display();
 
 }
 
@@ -373,8 +375,11 @@ void setup() {
 
   #if defined(__AVR_ATmega328P__) //Arduino Uno
     Wire.begin();
-  #elif defined(ARDUINO_ESP8266_NODEMCU)
+  #elif defined(ARDUINO_ESP8266_NODEMCU) 
     Wire.begin(SDA, SCL);
+    Wire.setClock(400000);
+  #elif defined(ARDUINO_ESP8266_ESP01)
+    Wire.begin(2, 0);
     Wire.setClock(400000);
   #endif
 
@@ -382,7 +387,9 @@ void setup() {
   Fastwire::setup(400, true);
 #endif
 
-  u8g2.begin();
+  display.init();
+  display.clear();
+  display.setContrast(32);
 
   Serial.begin(115200);
 
@@ -424,17 +431,18 @@ void setup() {
   // configure LED for output
   pinMode(LED_PIN, OUTPUT);
 
-  u8g2.setFontMode(0);
-  u8g2.setFont(u8g2_font_6x10_mf);
+  display.flipScreenVertically();
 
-  u8g2.clearBuffer();
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.setFont(ArialMT_Plain_10);
 
-  u8g2.drawStr(0, 15, "Xa:"); // write something to the internal memory
-  u8g2.drawStr(0, 27, "Ya:"); // write something to the internal memory
-  u8g2.drawStr(0, 39, "Za:"); // write something to the internal memory
-  u8g2.drawStr(0, 51, "Xg:"); // write something to the internal memory
-  u8g2.drawStr(0, 63, "Yg:"); // write something to the internal memory
-  u8g2.drawStr(60, 63, "Zg:"); // write something to the internal memory
+  display.drawString(0, 0, "Xa:"); // write something to the internal memory
+  display.drawString(0, 15, "Ya:"); // write something to the internal memory
+  display.drawString(0, 27, "Za:"); // write something to the internal memory
+  display.drawString(0, 39, "Xg:"); // write something to the internal memory
+  display.drawString(0, 51, "Yg:"); // write something to the internal memory
+  display.drawString(60, 51, "Zg:"); // write something to the internal memory
+  display.display();
 
 }
 
