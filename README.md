@@ -3,7 +3,7 @@ Two I2C devices works together demo
 *A Demo shown how to make 2 I2C devices work together on ESP8266.*
 
 **Parts Required**
-- NodeMCU v1.0 (base on ESP8266 ESP-12E), or any base on ESP8266 module (code *Wire.begin(SDA, SCL)* changed require for SDA/SCL pins. Ex: Wire.begin(2, 0) for ESP-01 module.)
+- NodeMCU v1.0 (base on ESP8266 ESP-12E), or any base on ESP8266 module (code *Wire.begin(SDA, SCL)* with changed require for SDA/SCL pins. (Ex: Wire.begin(2, 0) for ESP-01 module.)
 - I2C device: 
 -- Monochrome 128x64 OLED graphic display : SSD1306 ( or SH1106) x1
 -- Six-Axis (Gyro + Accelerometer) MotionTracking Device : MPU 6050 x1
@@ -19,7 +19,7 @@ Two I2C devices works together demo
 
 **VERSION**:   0.1
 
-Depends on the following Arduino libraries. I include in this library because few code modify required.  
+Depends on the following Arduino libraries. 
 - [jrowberg's I2Cdev library for Arduino](https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/I2Cdev)
 - [squix78's OLED library for Arduino code of esp8266](https://github.com/squix78/esp8266-oled-ssd1306)
 
