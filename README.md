@@ -5,8 +5,8 @@ Two I2C devices works together demo
 **Parts Required**
 - NodeMCU v1.0 (base on ESP8266 ESP-12E), or any base on ESP8266 module (code *Wire.begin(SDA, SCL)* with changed require for SDA/SCL pins. (Ex: Wire.begin(2, 0) for ESP-01 module.)
 - I2C device: 
--- Monochrome 128x64 OLED graphic display : SSD1306 ( or SH1106) x1
--- Six-Axis (Gyro + Accelerometer) MotionTracking Device : MPU 6050 x1
+  - Monochrome 128x64 OLED graphic display : SSD1306 ( or SH1106) x1
+  - Six-Axis (Gyro + Accelerometer) MotionTracking Device : MPU 6050 x1
 
 **Hardware Connect**
 - SDA of I2C devices (OLED/MPU6050) -> D2 (for NodeMCU) or GPIO 2 (for ESP-01)
