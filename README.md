@@ -15,7 +15,7 @@ Two I2C devices works together demo
 ![GitHub](https://github.com/benjenq/ESP8266_MPU6050_OLED_SSD1306/blob/master/ESP8266_MPU6050_OLED_SSD1306.JPG "icon,benjenq")
 
 **Precautions**
-- In theory this code could be built on Arduino AVR device (ATmega328P) vs Arduino IDE. But I got a **global variables > 2048 KB, out of memory** error and hard to reduce.
+- In theory this code could be built on Arduino AVR device (ATmega328P) via Arduino IDE. But I got a **global variables > 2048 KB, out of memory** error and hard to reduce.
 
 **VERSION**:   0.1
 
